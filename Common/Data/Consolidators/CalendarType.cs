@@ -49,6 +49,24 @@ namespace QuantConnect.Data.Consolidators
                 };
             }
         }
+
+        /// <summary>
+        /// Computes the start of quarter (1st of the starting month of current quarter) of given date/time
+        /// </summary>
+        public static Func<DateTime, CalendarInfo> Quarterly
+        {
+            get
+            {
+                return dt =>
+                {
+                    var nthQuarter = (dt.Month - 1) / 3;
+                    var firstMonthOfQuarter = nthQuarter * 3 + 1;
+                    var start = new DateTime(dt.Year, firstMonthOfQuarter, 1);
+                    var end = Expiry.EndOfQuarter(dt);
+                    return new CalendarInfo(start, end - start);
+                };
+            }
+        }
     }
 
     public struct CalendarInfo
